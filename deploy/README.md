@@ -4,7 +4,7 @@
 
 **project-showcase** is a **Flask + React** gallery: experiment cards load from **`experiments.json`** (title, description, image URL, and **`href`** for any target link). The UI is built with Vite into **`static/`** in CI before the release tarball is uploaded.
 
-Hosting matches **nfl-quiz**: GitHub Actions OIDC → **S3** artifact → **SSM** runs **`deploy/remote-install.sh`** on the **AwsInfra-Ec2Nginx** instance. Nginx serves **project-showcase at `/`** (proxy to **`127.0.0.1:8081`**) and **`/nfl-quiz/`** → **`8080`**. **`/project-showcase/...`** URLs **301** to the same path under **`/`** for backward compatibility. The **aws-infra** Ec2 nginx user data and this script use the same vhost shape; **ALB health checks** use **`/nginx-health`**. Redeploy **project-showcase** (or merge vhost manually) after updating the CDK stack.
+Hosting matches **nfl-quiz**: GitHub Actions OIDC → **S3** artifact → **SSM** runs **`deploy/remote-install.sh`** on the **AwsInfra-Ec2Nginx** instance. **`remote-install.sh` installs the app and systemd only.** Nginx (**`/`** → **`127.0.0.1:8081`**, **`/nfl-quiz/`**, **`/deephaven-experiments/`**, **`/nginx-health`**, **`/project-showcase/`** redirects) is defined solely in **aws-infra** `ec2-nginx-stack.ts`. After changing routes, redeploy **`AwsInfra-Ec2Nginx`** (or replace the instance).
 
 Shared infrastructure (bucket name, instance id) comes from the same **Ec2 nginx** stack outputs: **`Ec2NginxArtifactBucketName`**, **`NginxInstanceId`**.
 
@@ -47,4 +47,4 @@ Edit **`experiments.json`** at repo root. Each item: **`id`**, **`title`**, **`d
 
 ## Nginx `projectName`
 
-The install script writes **`/etc/nginx/conf.d/${NFL_QUIZ_PROJECT_NAME}-apps.conf`** (default **`learn-aws`**), matching nfl-quiz. Override on the host with **`NFL_QUIZ_PROJECT_NAME`** if your **aws-infra** CDK stack uses a different **`projectName`**.
+The vhost file is **`/etc/nginx/conf.d/<projectName>-apps.conf`**, created by **CDK user data** (default **`learn-aws`** from context **`projectName`**). Change **`projectName`** in **aws-infra** and redeploy the EC2 stack if the path on disk must match.
