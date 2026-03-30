@@ -1,0 +1,18 @@
+{
+  "experiments": [
+    {
+      "id": "nfl-quiz",
+      "title": "NFL Quiz",
+      "description": "A simple fun NFL quiz I built for my son. Also to get started with the AWS CDK, ec2 & networking.",
+      "imageUrl": "https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&w=1200&q=80",
+      "href": "../nfl-quiz"
+    },
+    {
+      "id": "deephaven-experiments",
+      "title": "Fun with Deephaven",
+      "description": "My introduction to Deephaven and the coinbase api.",
+      "imageUrl": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80",
+      "href": "../deephaven-experiments"
+    }
+  ]
+}
