@@ -14,7 +14,8 @@ env:
   EC2_STACK_NAME: ${{ vars.AWS_EC2_STACK_NAME || 'AwsInfra-Ec2Nginx' }}
 
 # OIDC role needs: cloudformation:DescribeStacks; s3:PutObject on artifact bucket;
-# codedeploy:CreateDeployment, RegisterApplicationRevision, GetDeployment, GetDeploymentConfig, GetApplicationRevision.
+# codedeploy:ListDeployments (wait-until-idle), CreateDeployment, RegisterApplicationRevision,
+# GetDeployment, GetDeploymentConfig, GetApplicationRevision.
 
 jobs:
   deploy:
@@ -100,11 +101,13 @@ jobs:
               --deployment-group-name "${DG}" \
               --include-only-statuses Created Queued InProgress Ready \
               --query 'deployments' \
-              --output text 2>/dev/null); then
-              echo "list-deployments failed (network/API); retrying in 20s…"
+              --output text 2>cd-list.err); then
+              echo "list-deployments failed (see stderr). Add codedeploy:ListDeployments to OIDC role; cdk deploy AwsInfra-GitHubOidc."
+              sed 's/^/  /' cd-list.err >&2 || true
               sleep 20
               continue
             fi
+            rm -f cd-list.err
             if [[ -z "${ids}" || "${ids}" == "None" ]]; then
               echo "CodeDeploy deployment group is idle."
               exit 0
