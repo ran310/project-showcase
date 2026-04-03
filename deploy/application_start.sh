@@ -5,6 +5,7 @@ cat > /etc/systemd/system/project-showcase.service <<'UNIT'
 [Unit]
 Description=Project Showcase (Gunicorn)
 After=network.target
+ConditionPathExists=/opt/project-showcase/venv/bin/gunicorn
 
 [Service]
 Type=simple
@@ -14,7 +15,6 @@ EnvironmentFile=/etc/project-showcase.env
 ExecStart=/opt/project-showcase/venv/bin/gunicorn --bind 127.0.0.1:8081 app:app
 Restart=on-failure
 RestartSec=5
-ConditionPathExists=/opt/project-showcase/venv/bin/gunicorn
 
 [Install]
 WantedBy=multi-user.target
