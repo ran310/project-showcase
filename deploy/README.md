@@ -4,17 +4,17 @@
 
 **project-showcase** is a **Flask + React** gallery: experiment cards load from **`experiments.json`** (title, description, image URL, and **`href`** for any target link). The UI is built with Vite into **`static/`** in CI before the release tarball is uploaded.
 
-Hosting matches **nfl-quiz**: GitHub Actions OIDC → **S3** artifact → **SSM** runs **`deploy/remote-install.sh`** on the **AwsInfra-Ec2Nginx** instance. **`remote-install.sh` installs the app and systemd only.** Nginx (**`/`** → **`127.0.0.1:8081`**, **`/nfl-quiz/`**, **`/deephaven-experiments/`**, **`/nginx-health`**, **`/project-showcase/`** redirects) is defined solely in **aws-infra** `ec2-nginx-stack.ts`. After changing routes, redeploy **`AwsInfra-Ec2Nginx`** (or replace the instance).
+Hosting matches **nfl-quiz**: GitHub Actions OIDC → **S3** zip artifact → **AWS CodeDeploy** on the shared **AwsInfra-Ec2Nginx** deployment group (see **`appspec.yml`** + **`deploy/*.sh`**). Nginx (**`/`** → **`127.0.0.1:8081`**, **`/nfl-quiz/`**, **`/deephaven-experiments/`**, **`/nginx-health`**, **`/project-showcase/`** redirects) is defined solely in **aws-infra** `ec2-nginx-stack.ts`. After changing routes, redeploy **`AwsInfra-Ec2Nginx`** (or replace the instance).
 
-Shared infrastructure (bucket name, instance id) comes from the same **Ec2 nginx** stack outputs: **`Ec2NginxArtifactBucketName`**, **`NginxInstanceId`**.
+Shared deploy metadata comes from stack outputs **`Ec2NginxArtifactBucketName`**, **`CodeDeployAppName`**, and **`CodeDeployDeploymentGroupName`**. Only one CodeDeploy deployment should run at a time on that group.
 
 ## IAM for GitHub Actions
 
-Use the same role as nfl-quiz (or equivalent): **`cloudformation:DescribeStacks`**, **S3** write to the artifact bucket, **SSM** send/get command. Set secret **`AWS_ROLE_TO_ASSUME`**. Optional variable **`AWS_REGION`**.
+Use the same role as nfl-quiz (or equivalent): **`cloudformation:DescribeStacks`**, **S3** write to the artifact bucket, **CodeDeploy** create deployment + read deployment/revision APIs. Set secret **`AWS_ROLE_TO_ASSUME`**. Optional variable **`AWS_REGION`**.
 
 ## Deploy
 
-- **CI:** **Deploy to AWS** builds the frontend with **`VITE_BASE=/`**, tars the repo (excluding **`.git`** and **`frontend/node_modules`**), uploads to **`s3://…/project-showcase/releases/<sha>.tar.gz`**, and invokes **`remote-install.sh`** via SSM. The instance uses **`APPLICATION_ROOT=/`**.
+- **CI:** **Deploy to AWS** builds the frontend with **`VITE_BASE=/`** (output **`static/`**), zips the repo excluding **`frontend/`** source, uploads **`s3://…/project-showcase/releases/<sha>.zip`**, and runs CodeDeploy. The instance uses **`APPLICATION_ROOT=/`**.
 - **Live URL:** **`http://<elastic-ip>/`** or **`https://<your-domain>/`** (TLS if you use the ALB + ACM setup).
 
 ## Local development
