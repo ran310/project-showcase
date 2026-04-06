@@ -4,9 +4,9 @@
 
 **project-showcase** is a **Flask + React** gallery: experiment cards load from **`experiments.json`** (title, description, image URL, and **`href`** for any target link). The UI is built with Vite into **`static/`** in CI before the release tarball is uploaded.
 
-Hosting matches **nfl-quiz**: GitHub Actions OIDC → **S3** zip artifact → **AWS CodeDeploy** on the shared **AwsInfra-Ec2Nginx** deployment group (see **`appspec.yml`** + **`deploy/*.sh`**). Nginx (**`/`** → **`127.0.0.1:8081`**, **`/nfl-quiz/`**, **`/deephaven-experiments/`**, **`/nginx-health`**, **`/project-showcase/`** redirects) is defined solely in **aws-infra** `ec2-nginx-stack.ts`. After changing routes, redeploy **`AwsInfra-Ec2Nginx`** (or replace the instance).
+Hosting matches **nfl-quiz**: GitHub Actions OIDC → **S3** zip artifact → **AWS CodeDeploy** (see **`appspec.yml`** + **`deploy/*.sh`**). The workflow resolves **`Ec2NginxArtifactBucketName`**, **`CodeDeployAppName`**, and **`CodeDeployDeploymentGroupNameProjectShowcase`** from **`AwsInfra-Ec2Nginx`**—nothing is hardcoded.
 
-Shared deploy metadata comes from stack outputs **`Ec2NginxArtifactBucketName`**, **`CodeDeployAppName`**, and **`CodeDeployDeploymentGroupName`**. Only one CodeDeploy deployment should run at a time on that group.
+Nginx routes and upstream ports are declared in **aws-infra** **`lib/config/ec2-nginx-apps.ts`**. After changing routes, redeploy **`AwsInfra-Ec2Nginx`** (or replace the instance).
 
 ## IAM for GitHub Actions
 

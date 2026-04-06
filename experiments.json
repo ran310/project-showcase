@@ -4,7 +4,7 @@
       "id": "nfl-quiz",
       "title": "NFL Quiz",
       "description": "A simple fun NFL quiz I built for my son. Also to get started with the AWS CDK, ec2 & networking.",
-      "imageUrl": "https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&w=1200&q=80",
+      "imageUrl": "https://images.unsplash.com/photo-1711045675405-e15ae29ebc98?auto=format&fit=crop&w=1200&q=80",
       "href": "https://ram-narayanan.com/nfl-quiz"
     },
     {
@@ -20,6 +20,13 @@
       "description": "A dashboard to monitor the health of my AWS resources. Obviously not very useful when its running on the same infra it is monitoring :)",
       "imageUrl": "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=1200&q=80",
       "href": "https://ram-narayanan.com/aws-health-dashboard"
+    },
+    {
+      "id": "city-distance-finder",
+      "title": "City Distance Finder",
+      "description": "Using Iceberg REST catalog, DuckDB and geolocation APIs to find the distance between two cities.",
+      "imageUrl": "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=1200&q=80",
+      "href": "https://ram-narayanan.com/city-distance-finder"
     }
   ]
 }
