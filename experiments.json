@@ -27,6 +27,13 @@
       "description": "Using Iceberg REST catalog, DuckDB and geolocation APIs to find the distance between two cities.",
       "imageUrl": "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=1200&q=80",
       "href": "https://ram-narayanan.com/city-distance-finder"
+    },
+    {
+      "id": "magic-cube",
+      "title": "MagicCube",
+      "description": "A Rubik's cube puzzle—solve, scramble, and practice moves in the browser.",
+      "imageUrl": "/images/magic-cube.jpeg",
+      "href": "https://ram-narayanan.com/magic-cube"
     }
   ]
 }
