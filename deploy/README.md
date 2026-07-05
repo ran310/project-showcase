@@ -45,6 +45,50 @@ For hot reload on the UI, run Flask on **8081** and in another terminal **`cd fr
 
 Edit **`experiments.json`** at repo root. Each item: **`id`**, **`title`**, **`description`**, **`imageUrl`**, **`href`** (any URL — repo, demo, blog, etc.).
 
+### Card images
+
+Cards use a **4:3** image area with **`object-fit: cover`** (same treatment for every experiment). Photos should be **full-bleed landscape hero images**—background and subject reach all four edges. Do **not** use square “app icon” exports with white margins, rounded frames, or gray checkerboard “transparency” baked in; those show visible borders on the card.
+
+**Option A — Unsplash (like NFL Quiz, City Distance Finder):** set **`imageUrl`** to an external URL, e.g.
+
+`https://images.unsplash.com/photo-…?auto=format&fit=crop&w=1200&q=80`
+
+**Option B — Bundled image:** save the file under **`frontend/public/images/`** (e.g. **`magic-cube.jpeg`**), reference it as **`"/images/magic-cube.jpeg"`**, then rebuild:
+
+```bash
+cd frontend && VITE_BASE=/ npm run build && cd ..
+```
+
+Vite copies **`frontend/public/`** into **`static/`** on build; Flask serves **`/images/…`** in production.
+
+### Nano Banana prompt (custom card art)
+
+In **Nano Banana** (Gemini image), set **aspect ratio 4:3** (or **1200×900**). Avoid “app icon”, “rounded square”, or “transparent background” presets.
+
+**Primary prompt:**
+
+```
+Create a wide hero photograph for a project showcase card, not an app icon.
+
+Subject: [your app subject — e.g. A glowing 3D Rubik’s cube, vivid colors, polished and slightly luminous].
+
+Setting: [full-bleed background that extends to all four edges — e.g. deep cosmic space with nebulae and stars].
+
+Composition: Landscape 4:3 aspect ratio (1200x900). Wide shot, subject centered, filling most of the frame. Full-bleed edge-to-edge artwork like a stock photo hero banner.
+
+Style: Cinematic, rich contrast, photorealistic. Dark moody atmosphere similar to a premium tech demo thumbnail.
+
+Technical requirements: No white border, no padding, no letterboxing, no rounded app-icon frame, no drop shadow outside the canvas, no checkerboard transparency pattern, no mockup device. The image should look like one continuous photograph that can be cropped with object-fit cover on a website card.
+```
+
+**If the first result still looks like an icon or has margins**, use an edit/follow-up:
+
+```
+Edit this image: remove all white margins, gray checkerboard corners, and rounded app-icon framing. Expand the background to fill the entire 4:3 canvas edge to edge. Keep the subject centered and larger. Output as a full-bleed landscape hero image only, not a square app icon.
+```
+
+Save the result to **`frontend/public/images/<id>.jpeg`**, set **`imageUrl`** to **`"/images/<id>.jpeg"`**, and rebuild the frontend.
+
 ## Nginx `projectName`
 
 The vhost file is **`/etc/nginx/conf.d/<projectName>-apps.conf`**, created by **CDK user data** (default **`learn-aws`** from context **`projectName`**). Change **`projectName`** in **aws-infra** and redeploy the EC2 stack if the path on disk must match.
