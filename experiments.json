@@ -30,10 +30,11 @@
     },
     {
       "id": "magic-cube",
-      "title": "MagicCube",
-      "description": "A Rubik's cube puzzle—solve, scramble, and practice moves in the browser.",
+      "title": "Magic Cube",
+      "description": "A kid-friendly Rubik's cube puzzle—solver - works well with the Gan i3 series smart cubes",
       "imageUrl": "/images/magic-cube.jpeg",
-      "href": "https://ram-narayanan.com/magic-cube"
+      "imageStyle": "icon",
+      "href": "https://ram-narayanan.com/magiccube-app"
     }
   ]
 }
